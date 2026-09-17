@@ -6,7 +6,7 @@ const jiti = createJiti(import.meta.url, {
   jsx: { runtime: "automatic" },
   tsconfigPaths: true,
 });
-const { selectVisibleProjects, shouldShowProjectFilter } = await jiti.import("./ProjectPicker.tsx");
+const { selectVisibleProjects, shouldOpenPickerDirectly, shouldShowProjectFilter } = await jiti.import("./ProjectPicker.tsx");
 
 const many = Array.from({ length: 12 }, (_, i) => `/work/project-${i}`);
 
@@ -44,4 +44,10 @@ test("a selected project already inside the cap is not duplicated", () => {
   const visible = selectVisibleProjects(many, "/work/project-2", "");
   assert.equal(visible.filter((p) => p === "/work/project-2").length, 1);
   assert.equal(visible.length, 7);
+});
+
+test("opens the directory picker directly when there are no projects yet", () => {
+  assert.equal(shouldOpenPickerDirectly([], null), true);
+  assert.equal(shouldOpenPickerDirectly(["/work/project"], null), false);
+  assert.equal(shouldOpenPickerDirectly([], "/work/project"), false);
 });

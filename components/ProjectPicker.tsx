@@ -55,6 +55,10 @@ export function shouldShowProjectFilter(recentProjects: string[]): boolean {
   return recentProjects.length > MAX_VISIBLE_PROJECTS;
 }
 
+export function shouldOpenPickerDirectly(recentProjects: string[], selectedCwd: string | null): boolean {
+  return recentProjects.length === 0 && selectedCwd === null;
+}
+
 /** Open the desktop folder dialog and return the server-validated project path. */
 export async function selectProjectDirectoryNative(selectedCwd: string | null, homeDir: string): Promise<string | null> {
   const path = await selectDirectoryNative(selectedCwd ?? (homeDir || undefined));
@@ -214,6 +218,10 @@ export function ProjectPicker({ recentProjects, selectedCwd, selectedProject, ho
         className={isInline ? "native-toolbar-button" : "sidebar-header-row"}
         disabled={disabled}
         onClick={(e) => {
+          if (shouldOpenPickerDirectly(recentProjects, selectedCwd)) {
+            void handleCustomPathClick();
+            return;
+          }
           if (isInline) {
             const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
             setDropdownRect({ top: rect.top, left: rect.left, width: rect.width });
