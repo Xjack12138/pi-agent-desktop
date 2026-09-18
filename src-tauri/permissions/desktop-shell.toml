@@ -37,3 +37,8 @@ commands.allow = ["set_ui_theme"]
 identifier = "allow-get-desktop-api-token"
 description = "Allows the trusted desktop WebView to authorize native-dialog filesystem requests."
 commands.allow = ["get_desktop_api_token"]
+
+[[permission]]
+identifier = "allow-is-desktop-updater-available"
+description = "Allows the trusted desktop WebView to check whether signed automatic updates are enabled."
+commands.allow = ["is_desktop_updater_available"]

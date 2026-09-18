@@ -1,8 +1,8 @@
-import { getAgentDir } from "@earendil-works/pi-coding-agent";
 import { createReadStream, existsSync } from "fs";
 import { readdir, stat } from "fs/promises";
 import { createInterface } from "readline";
 import { join } from "path";
+import { getSessionStorageRoot } from "./session-directory";
 
 /**
  * Incremental replacement for SessionManager.listAll().
@@ -145,7 +145,7 @@ async function buildScannedSessionInfo(filePath: string): Promise<ScannedSession
 const MAX_CONCURRENT_SCANS = 10;
 
 export async function scanAllSessions(): Promise<ScannedSessionInfo[]> {
-  const sessionsDir = join(getAgentDir(), "sessions");
+  const sessionsDir = getSessionStorageRoot();
   if (!existsSync(sessionsDir)) return [];
 
   let files: string[];

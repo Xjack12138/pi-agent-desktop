@@ -8,6 +8,7 @@
   },
   "permissions": [
     "core:default",
+    "allow-is-desktop-updater-available",
     "updater:default",
     "process:allow-restart"
   ]

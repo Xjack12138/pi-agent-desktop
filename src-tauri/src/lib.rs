@@ -1280,6 +1280,7 @@ pub fn run() {
         .manage(DesktopApiToken(desktop_api_token))
         .invoke_handler(tauri::generate_handler![
             get_desktop_api_token,
+            is_desktop_updater_available,
             open_external_url,
             open_path,
             reveal_item_in_dir,
@@ -1292,10 +1293,7 @@ pub fn run() {
             // The updater public key is embedded at compile time by the release
             // workflow. Local development builds intentionally omit it, which
             // keeps unsigned builds from accepting production updates.
-            if let Some(public_key) = option_env!("PI_AGENT_DESKTOP_UPDATER_PUBLIC_KEY")
-                .map(str::trim)
-                .filter(|key| !key.is_empty())
-            {
+            if let Some(public_key) = desktop_updater_public_key() {
                 app.handle().plugin(
                     tauri_plugin_updater::Builder::new()
                         .pubkey(public_key)
@@ -1372,4 +1370,15 @@ pub fn run() {
         }
         _ => {}
     });
+}
+
+fn desktop_updater_public_key() -> Option<&'static str> {
+    option_env!("PI_AGENT_DESKTOP_UPDATER_PUBLIC_KEY")
+        .map(str::trim)
+        .filter(|key| !key.is_empty())
+}
+
+#[tauri::command]
+fn is_desktop_updater_available() -> bool {
+    desktop_updater_public_key().is_some()
 }

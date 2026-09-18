@@ -585,6 +585,7 @@ export const zhCNLocale: LocalePlugin = {
     "appSettings.updateNote": "更新将安装一个完整签名的 {name} 发布版本。",
     "appSettings.noSignedBundle": "检测到组件更新，但包含这些更新的签名 {name} 安装包尚未发布。",
     "appSettings.openRelease": "查看发布",
+    "appSettings.devUpdateHint": "当前是本地开发版，不能自动安装签名更新。请更新仓库源码，或从 Releases 安装正式版本。",
     "appSettings.languageSection": "语言",
     "appSettings.languageHint": "选择界面显示语言。",
     "appSettings.appearanceSection": "外观",

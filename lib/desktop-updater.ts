@@ -22,6 +22,12 @@ export function isTauriDesktop(): boolean {
   return typeof window !== "undefined" && Boolean(window.__TAURI_INTERNALS__);
 }
 
+export async function isDesktopUpdaterAvailable(): Promise<boolean> {
+  if (!isTauriDesktop()) return false;
+  const { invoke } = await import("@tauri-apps/api/core");
+  return invoke<boolean>("is_desktop_updater_available");
+}
+
 export async function installLatestDesktopRelease(
   onProgress: (progress: DesktopUpgradeProgress) => void,
 ): Promise<DesktopUpgradeResult> {

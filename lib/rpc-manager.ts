@@ -8,6 +8,7 @@ import { validateAgentImages } from "./image-attachments";
 import { invalidateModelsCache } from "./models-cache";
 import { resolveVisibleModels, selectInitialModelScope } from "./model-scope";
 import { extractTextContent } from "./session-scan";
+import { getProjectSessionDir } from "./session-directory";
 import { cacheSessionPath, invalidateSessionListCache } from "./session-reader";
 import { getProjectTrustStatus, projectTrustReloadOptions } from "./project-trust";
 import { persistExplicitStartupPreferences } from "./startup-preferences";
@@ -1282,7 +1283,7 @@ export async function startRpcSession(
     sessionManager = SessionManager.open(sessionFile, undefined);
   } else {
     if (!cwd) throw new Error("cwd is required for a new session");
-    sessionManager = SessionManager.create(cwd, undefined);
+    sessionManager = SessionManager.create(cwd, getProjectSessionDir(cwd));
   }
   const sessionCwd = sessionManager.getCwd();
   const finishStartingSession = trackStartingSession(sessionCwd);

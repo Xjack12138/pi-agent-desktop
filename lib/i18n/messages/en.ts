@@ -585,6 +585,7 @@ export const enLocale: LocalePlugin = {
     "appSettings.updateNote": "Updating installs a complete signed {name} release.",
     "appSettings.noSignedBundle": "The component updates are detected, but a signed {name} bundle containing them has not been published yet.",
     "appSettings.openRelease": "Open release",
+    "appSettings.devUpdateHint": "This is a local development build, so it cannot install signed updates automatically. Update the repository or install a release build.",
     "appSettings.languageSection": "Language",
     "appSettings.languageHint": "Choose the interface language.",
     "appSettings.appearanceSection": "Appearance",

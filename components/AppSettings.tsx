@@ -15,6 +15,7 @@ import { compareAppVersions } from "@/lib/app-updates";
 import { APP_PREF_KEYS, getPrefBool, setPrefBool } from "@/lib/app-prefs";
 import {
   installLatestDesktopRelease,
+  isDesktopUpdaterAvailable,
   isTauriDesktop,
   type DesktopUpgradeProgress,
 } from "@/lib/desktop-updater";
@@ -217,6 +218,7 @@ export function AppSettings({ onClose }: { onClose: () => void }) {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [upgradeProgress, setUpgradeProgress] = useState<DesktopUpgradeProgress | null>(null);
   const [upgradeError, setUpgradeError] = useState<string | null>(null);
+  const [updaterAvailable, setUpdaterAvailable] = useState<boolean | null>(null);
   const [closeQuits, setCloseQuits] = useState(() => getPrefBool(APP_PREF_KEYS.closeQuits, false));
   const [notifyOnComplete, setNotifyOnComplete] = useState(() => getPrefBool(APP_PREF_KEYS.notifyOnComplete, true));
   const [customCssBusy, setCustomCssBusy] = useState(false);
@@ -238,6 +240,12 @@ export function AppSettings({ onClose }: { onClose: () => void }) {
       setCustomCssBusy(false);
     }
   };
+
+  useEffect(() => {
+    void isDesktopUpdaterAvailable()
+      .then(setUpdaterAvailable)
+      .catch(() => setUpdaterAvailable(false));
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -278,7 +286,7 @@ export function AppSettings({ onClose }: { onClose: () => void }) {
     [components],
   );
   const updateAvailable = pendingUpdates.length > 0;
-  const canUpgrade = !loading && updateAvailable && !upgradeProgress;
+  const canUpgrade = !loading && updateAvailable && updaterAvailable === true && !upgradeProgress;
   const downloadPercent = upgradeProgress?.phase === "downloading"
     && upgradeProgress.totalBytes
     ? Math.min(100, Math.round((upgradeProgress.downloadedBytes ?? 0) / upgradeProgress.totalBytes * 100))
@@ -403,7 +411,7 @@ export function AppSettings({ onClose }: { onClose: () => void }) {
                 latestLabel={t("appSettings.latestRelease")}
                 upgradeAvailableLabel={t("appSettings.upgradeAvailable")}
               />
-              {(updateAvailable || upgradeProgress) && (
+              {(updateAvailable || upgradeProgress) && updaterAvailable === true && (
                 <button
                   className="native-button native-button-primary"
                   type="button"
@@ -414,7 +422,24 @@ export function AppSettings({ onClose }: { onClose: () => void }) {
                   {upgradeLabel}
                 </button>
               )}
+              {updateAvailable && updaterAvailable === false && appRelease?.releaseUrl && (
+                <a
+                  className="native-button native-button-primary"
+                  href={appRelease.releaseUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={(event) => handleExternalLinkClick(event, appRelease.releaseUrl!)}
+                  style={{ minWidth: 112, textAlign: "center", textDecoration: "none" }}
+                >
+                  {t("appSettings.openRelease")}
+                </a>
+              )}
             </div>
+            {updateAvailable && updaterAvailable === false && (
+              <div style={{ marginTop: 9, color: "var(--text-muted)", fontSize: 11 }}>
+                {t("appSettings.devUpdateHint")}
+              </div>
+            )}
             {upgradeError && (
               <div className="native-inline-alert is-error" role="alert" style={{ marginTop: 9 }}>
                 {upgradeError}

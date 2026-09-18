@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/.tools/
 /.pnp
 .pnp.*
 .yarn/*
@@ -54,8 +55,17 @@ next-env.d.ts
 /src-tauri/resources/node/
 /src-tauri/target/
 
-# pi agent local state
+# portable Pi profile: keep settings and authored resources, ignore local state and downloads
 /.pi/
+/.pi-agent/npm/
+/.pi-agent/git/
+/.pi-agent/auth.json
+/.pi-agent/oauth.json
+/.pi-agent/trust.json
+/.pi-agent/models.json
+/.pi-agent/models-store.json
+/.pi-agent/sessions/
+/.pi-agent/pi-web-update-check.json
 
 # local tooling artifacts
 .playwright-mcp/
