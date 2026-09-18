@@ -1,0 +1,8 @@
+{
+  "defaultProvider": "deepseek",
+  "defaultModel": "deepseek-flash",
+  "defaultThinkingLevel": "high",
+  "packages": [
+    "npm:pi-mcp-adapter@2.34.0"
+  ]
+}
